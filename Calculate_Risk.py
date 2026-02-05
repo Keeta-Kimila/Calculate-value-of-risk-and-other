@@ -72,11 +72,11 @@ if input_mode == "Upload Dataset (CSV)":
         else:
             st.sidebar.error("CSV must contain numeric columns.")
             mean_input = st.sidebar.number_input("Location (Median)", value=0.0)
-            scale_input = st.sidebar.number_input("Scale Parameter", value=1.0)
+            scale_input = st.sidebar.number_input("Scale Parameter", value=0.02)
     else:
         st.sidebar.info("Upload a CSV to auto-calculate parameters.")
         mean_input = st.sidebar.number_input("Location (Median)", value=0.0)
-        scale_input = st.sidebar.number_input("Scale Parameter", value=0.05)
+        scale_input = st.sidebar.number_input("Scale Parameter", value=0.02)
 else:
     # Manual Input Defaults
     scale_input = st.sidebar.number_input("Scale Parameter", value=0.02, min_value=0.0001, format="%.4f")
