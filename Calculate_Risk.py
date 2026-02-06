@@ -1,48 +1,15 @@
 import streamlit as st
-import math
 import numpy as np
 import pandas as pd
 import plotly.graph_objects as go
 from scipy.stats import laplace
+import laplace_distribution as lapd
 # --- Configuration ---
 st.set_page_config(
     page_title="Laplace Risk Analysis Dashboard",
     page_icon="Eq",
     layout="wide"
 )
-# --- Core Logic ---
-def calculate_risk_metrics(alpha, scale, mean, pv):
-    """
-    Calculates VaR and CVaR metrics based on the provided source logic.
-    """
-    try:
-        # Calculate VaR Rate (Log Return threshold)
-        var_rate = math.log((1 - alpha) * 2) * scale + mean
-        results = {
-            "var_rate_raw": var_rate,
-            "is_risk": False,
-            "metrics": {}
-        }
-        # The source logic checks if the calculated rate implies a loss (negative return)
-        if var_rate < 0:
-            results["is_risk"] = True
-            # Calculate VaR Monetary Value
-            var_pt = pv * (math.exp(var_rate) - 1)
-            # Calculate CVaR Rate
-            cvar_rate_val = var_rate * (-1) + scale 
-            # Calculate CVaR Monetary Value
-            cvar_pt = pv * (math.exp(-cvar_rate_val) - 1)
-            # Map to display values (reversing signs where source code did)
-            results["metrics"] = {
-                "VaR Rate": var_rate * -1,      # Displayed as positive magnitude
-                "VaR Reserved": var_pt * -1,    # Displayed as positive magnitude
-                "CVaR Rate": cvar_rate_val,     # Displayed as is
-                "Mean Big Loss": cvar_pt * -1   # Displayed as positive magnitude
-            }
-        return results
-    except ValueError:
-        # Handle math domain errors (e.g. log of negative number)
-        return None
 # --- UI & Input Section ---
 st.title("Financial Risk Analysis: Laplace Model")
 st.markdown("""
@@ -86,7 +53,7 @@ pv_input = st.sidebar.number_input("Present Value (PV) / Investment", value=1000
 alpha_input = st.sidebar.number_input("Confidence Level (Alpha)", value=0.95, min_value=0.0, format="%.2f")
 # --- Calculation & Display ---
 # Run calculation
-result = calculate_risk_metrics(alpha_input, scale_input, mean_input, pv_input)
+result = lapd.calculate_risk_metrics(alpha_input, scale_input, mean_input, pv_input)
 st.markdown("---")
 if result:
     if result["is_risk"]:
