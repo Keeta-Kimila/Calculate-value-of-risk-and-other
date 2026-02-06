@@ -53,9 +53,7 @@ pv_input = st.sidebar.number_input("Present Value (PV) / Investment", value=1000
 alpha_input = st.sidebar.number_input("Confidence Level (Alpha)", value=0.95, min_value=0.0, format="%.2f")
 # --- Calculation & Display ---
 # Run calculation
-choose = {"laplace":lapd.calculate_risk_metrics}#test
-choose = choose["laplace"]
-result = choose(alpha_input, scale_input, mean_input, pv_input)
+result = lapd.calculate_risk_metrics(alpha_input, scale_input, mean_input, pv_input)
 st.markdown("---")
 if result:
     if result["is_risk"]:
